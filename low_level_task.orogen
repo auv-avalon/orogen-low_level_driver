@@ -3,22 +3,31 @@ version "0.1"
 
 #Checkt Package Config nach include pfaden (hier z.B. Sonar.h
 #import_types_from "dfki"
+import_types_from "LongExposure.hpp"
+import_types_from "ShortExposure.hpp"
+import_types_from "DebugLED.hpp"
+import_types_from "ServoValue.hpp"
 
-using_library "lowLevelDriver"
+using_library "lowlevelDriver"
 
 task_context "LowLevelTask" do
 	#	 Name Frei belibig, Namespace::Objekt
+	needs_configuration
+	
 	output_port("Depth","double").
 		doc "Current Depth"
     
-	input_port("ShortExposure","uint16_t").
+	input_port("ShortExposure","controlData::ShortExposure").
 		doc "Short Exposure Time for Triggered Prosilica Mode"
 	
-	input_port("LongExposure","uint16_t").
+	input_port("LongExposure","controlData::LongExposure").
 		doc "Long Exposure Time for Triggered Prosilica Mode"
 	
-	input_port("ServoValue","uint16_t").
+	input_port("ServoValue","controlData::ServoValue").
 		doc "Servo Target Position"
+	
+	input_port("DebugLED","controlData::DebugLED").
+		doc "Debug LED Values"
 
 	property('port', '/std/string', "").
         	doc 'the device port'
@@ -26,6 +35,10 @@ task_context "LowLevelTask" do
 	property('securityOverride','bool','false').
 		doc "Sercutiry Overrite to make the laser working also until avalon not reaches the safe-depth"
 	
+	port_driven:ShortExposure
+	port_driven:LongExposure
+	port_driven:ServoValue
+	port_driven:DebugLED
 	fd_driven	
 end
 
