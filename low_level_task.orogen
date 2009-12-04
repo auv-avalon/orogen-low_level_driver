@@ -7,6 +7,7 @@ import_types_from "LongExposure.hpp"
 import_types_from "ShortExposure.hpp"
 import_types_from "DebugLED.hpp"
 import_types_from "ServoValue.hpp"
+import_types_from "DepthReading.hpp"
 
 using_library "lowlevelDriver"
 
@@ -14,7 +15,7 @@ task_context "LowLevelTask" do
 	#	 Name Frei belibig, Namespace::Objekt
 	needs_configuration
 	
-	output_port("Depth","double").
+	output_port("Depth","sensorData::DepthReading").
 		doc "Current Depth"
     
 	input_port("ShortExposure","controlData::ShortExposure").
