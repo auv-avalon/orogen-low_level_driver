@@ -79,6 +79,7 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 	
 	sensorData::DepthReading depth;	
 	if(llpc.getData(depth.value)){
+		depth.stamp.now();
 		_Depth.write(depth);
 	}
 
