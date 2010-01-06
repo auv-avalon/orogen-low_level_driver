@@ -36,10 +36,10 @@ task_context "LowLevelTask" do
 	property('securityOverride','bool','false').
 		doc "Sercutiry Overrite to make the laser working also until avalon not reaches the safe-depth"
 	
-	port_driven:ShortExposure
-	port_driven:LongExposure
-	port_driven:ServoValue
-	port_driven:DebugLED
+	port_driven :ShortExposure
+	port_driven :LongExposure
+	port_driven :ServoValue
+	port_driven :DebugLED
 	fd_driven	
 end
 
