@@ -2,7 +2,7 @@
 #define SHORTEXPOSURE_H 
 
 #include <inttypes.h>
-#include <dfki/time.h>
+#include <base/time.h>
 
 namespace controlData
 {
@@ -11,7 +11,7 @@ namespace controlData
 //	ShortExposure(uint16_t v){
 //		value = v;
 //	}
-		DFKI::Time stamp;
+		base::Time stamp;
 		int16_t value;
 #ifndef __orogen
 #endif

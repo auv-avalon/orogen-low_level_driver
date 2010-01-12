@@ -1,12 +1,12 @@
 #ifndef DEPTHREADING_H
 #define DEPTHREADING_H
 
-#include <dfki/time.h>
+#include <base/time.h>
 
 namespace sensorData
 {
 	struct DepthReading{
-		DFKI::Time stamp;
+		base::Time stamp;
 		double value;
 	};
 

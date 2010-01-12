@@ -2,12 +2,12 @@
 #define SERVOVALUE_H
 
 #include <inttypes.h>
-#include <dfki/time.h>
+#include <base/time.h>
 
 namespace controlData
 {
 	struct ServoValue{
-		DFKI::Time stamp;
+		base::Time stamp;
 		int16_t value;
 	};
 

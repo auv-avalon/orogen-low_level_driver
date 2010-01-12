@@ -2,12 +2,12 @@
 #define DEBUGLED_H
 
 #include <inttypes.h>
-#include <dfki/time.h>
+#include <base/time.h>
 
 namespace controlData
 {
 	struct DebugLED{
-		DFKI::Time stamp;
+		base::Time stamp;
 		int8_t value;
 	};
 

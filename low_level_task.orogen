@@ -2,7 +2,7 @@ name "low_level_driver"
 version "0.1"
 
 #Checkt Package Config nach include pfaden (hier z.B. Sonar.h
-import_types_from "dfki"
+import_types_from "base"
 import_types_from "LongExposure.hpp"
 import_types_from "ShortExposure.hpp"
 import_types_from "DebugLED.hpp"
