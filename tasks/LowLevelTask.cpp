@@ -36,9 +36,8 @@ bool LowLevelTask::configureHook()
 		//getFileDescriptorActivity()->watch(llpc.getReadFD());
 	    //}
 	}
- 	//llpc.setShortExposure(_shortExposure.value());
- 	//llpc.setLongExposure(_longExposure.value());
-	llpc.reset();
+ 	llpc.setShortExposure(_shortExposure.value());
+ 	llpc.setLongExposure(_longExposure.value());
 	return true;
 }
 // bool LowLevelTask::startHook()
