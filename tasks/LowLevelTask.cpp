@@ -13,6 +13,7 @@ RTT::FileDescriptorActivity* LowLevelTask::getFileDescriptorActivity()
 LowLevelTask::LowLevelTask(std::string const& name)
     : LowLevelTaskBase(name)
 {
+	depthOffset=9999.9;
 }
 
 
@@ -28,13 +29,16 @@ bool LowLevelTask::configureHook()
 	if(!llpc.init(_port.value())){
 		return false;
 	}else{
-	    if(getFileDescriptorActivity() == 0){
-		fprintf(stderr,"Cannot use File Descriptor Activity, did you use periodic?\n");
-		return false;
-	    }else{
-		getFileDescriptorActivity()->watch(llpc.getReadFD());
-	    }
+	    //if(getFileDescriptorActivity() == 0){
+		//fprintf(stderr,"Cannot use File Descriptor Activity, did you use periodic?\n");
+		//return false;
+	    //}else{
+		//getFileDescriptorActivity()->watch(llpc.getReadFD());
+	    //}
 	}
+ 	//llpc.setShortExposure(_shortExposure.value());
+ 	//llpc.setLongExposure(_longExposure.value());
+	llpc.reset();
 	return true;
 }
 // bool LowLevelTask::startHook()
@@ -44,6 +48,7 @@ bool LowLevelTask::configureHook()
 
 void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_ports)
 {
+	try{
 	if(isPortUpdated(_ShortExposure)){
 		controlData::ShortExposure data;	
 		if(!_ShortExposure.read(data)){
@@ -79,10 +84,15 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 	
 	sensorData::DepthReading depth;	
 	if(llpc.getData(depth.value)){
+		if(depthOffset==9999.9){
+			depthOffset=depth.value;
+		}
+		depth.value-=depthOffset;	
 		depth.stamp = base::Time::now();
 		_Depth.write(depth);
 	}
-
+	}catch(...)
+	{printf("error tiefensensor lowLevel Task skipping...\n");}
 
 }
 

@@ -84,6 +84,7 @@ namespace low_level_driver {
         // void cleanupHook();
 	private:
 		LowLevelProcessor llpc;
+		double depthOffset;
     };
 }
 
