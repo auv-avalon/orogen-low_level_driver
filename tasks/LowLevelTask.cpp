@@ -53,7 +53,8 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 		if(!_ShortExposure.read(data)){
 			fprintf(stderr,"Data not availible yet\n");	
 		}else{
- 			llpc.setShortExposure(data.value);
+ 			printf("Got new Short Exposure %i\n",data.value);
+			llpc.setShortExposure(data.value);
 		}
 	}
 	if(isPortUpdated(_LongExposure)){
@@ -61,6 +62,7 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 		if(!_LongExposure.read(data)){
 			fprintf(stderr,"Data not availible yet\n");	
 		}else{
+ 			printf("Got new Long Exposure %i\n",data.value);
  			llpc.setLongExposure(data.value);
 		}
 	}
