@@ -108,8 +108,7 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
                         double z_iir = _zIIR.get();
                         double zNew  = zCurrent.position.z() * (1 - z_iir) + zReading * z_iir;
 
-                        base::Time lastUpdateTime = zCurrent.time;
-                        double delta_t = (now - lastUpdateTime).toSeconds();
+                        double delta_t = 1.0 / 8; // update rate of the depth sensor
                         double zNewVelocity = (zNew - zCurrent.position.z())
                             / delta_t;
 
