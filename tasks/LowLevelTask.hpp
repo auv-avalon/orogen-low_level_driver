@@ -43,7 +43,7 @@ namespace low_level_driver {
          * stay in Stopped. Otherwise, it goes into Running and updateHook()
          * will be called.
          */
-        // bool startHook();
+        bool startHook();
 
         /** This hook is called by Orocos when the component is in the Running
          * state, at each activity step. Here, the activity gives the "ticks"
@@ -84,6 +84,9 @@ namespace low_level_driver {
         // void cleanupHook();
 	private:
 		LowLevelProcessor llpc;
+                /** Last depth reading */
+                double depthCurrent;
+                /** Depth offset (i.e. depth reading at z=0) */
 		double depthOffset;
     };
 }

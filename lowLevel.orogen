@@ -15,7 +15,7 @@ task_context "LowLevelTask" do
 	#	 Name Frei belibig, Namespace::Objekt
 	needs_configuration
 	
-	output_port("Depth","sensorData::DepthReading").
+	output_port("depth_samples", "wrappers::samples::RigidBodyState").
 		doc "Current Depth"
     
 	input_port("ShortExposure","controlData::ShortExposure").
@@ -30,6 +30,9 @@ task_context "LowLevelTask" do
 	input_port("DebugLED","controlData::DebugLED").
 		doc "Debug LED Values"
 	
+        # IIR filter factor for the depth measurement.
+        #  depth_value = depthIIR * new_depth + (1 - depthIIR) * depth_value
+        property('depthIIR', 'double', 0.8);
 	property('longExposure', 'int', 15000)
 	property('shortExposure', 'int', 5000)
 
