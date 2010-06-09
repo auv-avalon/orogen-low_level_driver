@@ -40,11 +40,15 @@ bool LowLevelTask::configureHook()
  	llpc.setShortExposure(_shortExposure.value());
  	llpc.setLongExposure(_longExposure.value());
         zOffset  = UNINITIALIZED_Z_VALUE;
+
+        zCurrent.invalidate();
+        zCurrent.time = base::Time();
 	return true;
 }
 bool LowLevelTask::startHook()
 {
         zCurrent.invalidate();
+        zCurrent.time = base::Time();
         return true;
 }
 
