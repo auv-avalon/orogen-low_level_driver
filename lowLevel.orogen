@@ -30,9 +30,12 @@ task_context "LowLevelTask" do
 	input_port("DebugLED","controlData::DebugLED").
 		doc "Debug LED Values"
 	
-        # IIR filter factor for the depth measurement.
-        #  depth_value = depthIIR * new_depth + (1 - depthIIR) * depth_value
-        property('depthIIR', 'double', 0.8);
+        # IIR filter factor for the Z measurement.
+        #  z_value = zIIR * new_z + (1 - zIIR) * z_value
+        property('zIIR', 'double', 0.8);
+        # IIR filter factor for the Z speed measurement.
+        #  zVelocity_value = zVelocityIIR * new_zVelocity + (1 - zVelocityIIR) * zVelocity_value
+        property('zVelocityIIR', 'double', 0.8);
 	property('longExposure', 'int', 15000)
 	property('shortExposure', 'int', 5000)
 

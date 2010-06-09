@@ -85,9 +85,9 @@ namespace low_level_driver {
 	private:
 		LowLevelProcessor llpc;
                 /** Last depth reading */
-                double depthCurrent;
+                base::samples::RigidBodyState zCurrent;
                 /** Depth offset (i.e. depth reading at z=0) */
-		double depthOffset;
+		double zOffset;
     };
 }
 

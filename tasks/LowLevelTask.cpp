@@ -5,7 +5,7 @@
 
 using namespace low_level_driver;
 
-static const double UNINITIALIZED_DEPTH_VALUE = 9999.9;
+static const double UNINITIALIZED_Z_VALUE = 9999.9;
 
 RTT::FileDescriptorActivity* LowLevelTask::getFileDescriptorActivity()
 { return dynamic_cast< RTT::FileDescriptorActivity* >(getActivity().get()); }
@@ -14,8 +14,7 @@ RTT::FileDescriptorActivity* LowLevelTask::getFileDescriptorActivity()
 LowLevelTask::LowLevelTask(std::string const& name)
     : LowLevelTaskBase(name)
 {
-        depthOffset  = UNINITIALIZED_DEPTH_VALUE;
-        depthCurrent = UNINITIALIZED_DEPTH_VALUE;
+        zOffset  = UNINITIALIZED_Z_VALUE;
 }
 
 
@@ -40,13 +39,12 @@ bool LowLevelTask::configureHook()
 	}
  	llpc.setShortExposure(_shortExposure.value());
  	llpc.setLongExposure(_longExposure.value());
-        depthOffset  = UNINITIALIZED_DEPTH_VALUE;
-        depthCurrent = UNINITIALIZED_DEPTH_VALUE;
+        zOffset  = UNINITIALIZED_Z_VALUE;
 	return true;
 }
 bool LowLevelTask::startHook()
 {
-        depthCurrent = UNINITIALIZED_DEPTH_VALUE;
+        zCurrent.invalidate();
         return true;
 }
 
@@ -88,25 +86,37 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 		}
 	}
 	
-        double depthReading;
-	if(llpc.getData(depthReading)){
-		if(depthOffset == UNINITIALIZED_DEPTH_VALUE){
-			depthOffset  = depthReading;
+        double zReading;
+	if(llpc.getData(zReading)){
+		if(zOffset == UNINITIALIZED_Z_VALUE){
+			zOffset  = zReading;
 		}
-		if(depthCurrent == UNINITIALIZED_DEPTH_VALUE){
-			depthCurrent  = depthReading;
+                zReading -= zOffset;
+                base::Time now = base::Time::now();
+
+		if(zCurrent.time.isNull())
+                {
+                        zCurrent.position.z() = zReading;
+                        zCurrent.cov_position(2, 2) = 0.5;
 		}
-                depthReading -= depthOffset;
-                double iir = _depthIIR.get();
-                depthCurrent = iir * depthReading + (1 - iir) * depthCurrent;
+                else
+                {
+                        double z_iir = _zIIR.get();
+                        double zNew  = zCurrent.position.z() * (1 - z_iir) + zReading * z_iir;
 
-                base::samples::RigidBodyState depth_sample;
-                depth_sample.invalidate();
-		depth_sample.time = base::Time::now();
-		depth_sample.position.z() = depthCurrent;
-                depth_sample.cov_position(2, 2) = 0.5;
+                        base::Time lastUpdateTime = zCurrent.time;
+                        double delta_t = (now - lastUpdateTime).toSeconds();
+                        double zNewVelocity = (zNew - zCurrent.position.z())
+                            / delta_t;
 
-		_depth_samples.write(depth_sample);
+                        double z_velocity_iir = _zVelocityIIR.get();
+                        zCurrent.velocity.z() = zCurrent.velocity.z() * (1 - z_velocity_iir) + zNewVelocity * z_velocity_iir;
+                        zCurrent.position.z() = zNew;
+                        zCurrent.cov_velocity(2, 2) = 0.1;
+                }
+
+                zCurrent.time = now;
+		_depth_samples.write(zCurrent);
 	}
 	}catch(...)
 	{printf("error tiefensensor lowLevel Task skipping...\n");}
