@@ -37,6 +37,13 @@ bool LowLevelTask::configureHook()
 		//getFileDescriptorActivity()->watch(llpc.getReadFD());
 	    //}
 	}
+
+        RTT::FileDescriptorActivity* activity = getFileDescriptorActivity();
+        if (activity)
+        {
+            activity->watch(llpc.getFileDescriptor());
+            activity->setTimeout(1000);
+        }
  	llpc.setShortExposure(_shortExposure.value());
  	llpc.setLongExposure(_longExposure.value());
         zOffset  = UNINITIALIZED_Z_VALUE;
@@ -54,7 +61,13 @@ bool LowLevelTask::startHook()
 
 void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_ports)
 {
-	try{
+        RTT::FileDescriptorActivity* activity = getFileDescriptorActivity();
+        if (activity)
+        {
+            if (activity->hasError() || activity->hasTimeout())
+                return fatal();
+        }
+
 	if(isPortUpdated(_ShortExposure)){
 		controlData::ShortExposure data;	
 		if(!_ShortExposure.read(data)){
@@ -108,7 +121,7 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
                         double z_iir = _zIIR.get();
                         double zNew  = zCurrent.position.z() * (1 - z_iir) + zReading * z_iir;
 
-                        double delta_t = 1.0 / 8; // update rate of the depth sensor
+                        double delta_t = 0.0879; // update rate of the depth sensor
                         double zNewVelocity = (zNew - zCurrent.position.z())
                             / delta_t;
 
@@ -126,8 +139,6 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
                 zCurrent.time = now;
 		_depth_samples.write(zCurrent);
 	}
-	}catch(...)
-	{printf("error tiefensensor lowLevel Task skipping...\n");}
 
 }
 

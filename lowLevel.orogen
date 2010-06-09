@@ -49,7 +49,7 @@ task_context "LowLevelTask" do
 	port_driven :LongExposure
 	port_driven :ServoValue
 	port_driven :DebugLED
-	#fd_driven	
+	fd_driven	
 end
 
 deployment "low_level_task_application" do
