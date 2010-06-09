@@ -112,8 +112,13 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
                         double zNewVelocity = (zNew - zCurrent.position.z())
                             / delta_t;
 
+
                         double z_velocity_iir = _zVelocityIIR.get();
-                        zCurrent.velocity.z() = zCurrent.velocity.z() * (1 - z_velocity_iir) + zNewVelocity * z_velocity_iir;
+                        if (isinf(zCurrent.cov_velocity(2, 2)))
+                            zCurrent.velocity.z() = zNewVelocity;
+                        else
+                            zCurrent.velocity.z() = zCurrent.velocity.z() * (1 - z_velocity_iir) + zNewVelocity * z_velocity_iir;
+
                         zCurrent.position.z() = zNew;
                         zCurrent.cov_velocity(2, 2) = 0.1;
                 }
