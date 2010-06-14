@@ -42,7 +42,7 @@ task_context "LowLevelTask" do
 	property('port', '/std/string', "").
         	doc 'the device port'
 	
-	property('securityOverride','bool','true').
+	property('securityOverride','bool',true).
 		doc "Sercutiry Overrite to make the laser working also until avalon not reaches the safe-depth"
 	
 	port_driven :ShortExposure
