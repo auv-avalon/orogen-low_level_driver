@@ -1,7 +1,7 @@
 #include "LowLevelTask.hpp"
 
 #include <rtt/FileDescriptorActivity.hpp>
-
+#include <TimestampEstimator.hpp>
 
 using namespace low_level_driver;
 
@@ -12,7 +12,7 @@ RTT::FileDescriptorActivity* LowLevelTask::getFileDescriptorActivity()
 
 
 LowLevelTask::LowLevelTask(std::string const& name)
-    : LowLevelTaskBase(name)
+    : LowLevelTaskBase(name), timestamp_estimator(0)
 {
         zOffset  = UNINITIALIZED_Z_VALUE;
 }
@@ -29,13 +29,6 @@ bool LowLevelTask::configureHook()
 {
 	if(!llpc.init(_port.value())){
 		return false;
-	}else{
-	    //if(getFileDescriptorActivity() == 0){
-		//fprintf(stderr,"Cannot use File Descriptor Activity, did you use periodic?\n");
-		//return false;
-	    //}else{
-		//getFileDescriptorActivity()->watch(llpc.getReadFD());
-	    //}
 	}
 
         RTT::FileDescriptorActivity* activity = getFileDescriptorActivity();
@@ -47,15 +40,14 @@ bool LowLevelTask::configureHook()
  	llpc.setShortExposure(_shortExposure.value());
  	llpc.setLongExposure(_longExposure.value());
         zOffset  = UNINITIALIZED_Z_VALUE;
-
-        zCurrent.invalidate();
-        zCurrent.time = base::Time();
 	return true;
 }
 bool LowLevelTask::startHook()
 {
         zCurrent.invalidate();
         zCurrent.time = base::Time();
+	llpc.clear();
+	timestamp_estimator = new aggregator::TimestampEstimator(base::Time::fromSeconds(2));
         return true;
 }
 
@@ -109,7 +101,7 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 			zOffset  = zReading;
 		}
                 zReading -= zOffset;
-                base::Time now = base::Time::now();
+                base::Time now = timestamp_estimator->update(base::Time::now());
 
 		if(zCurrent.time.isNull())
                 {
@@ -145,10 +137,13 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 // void LowLevelTask::errorHook()
 // {
 // }
-// void LowLevelTask::stopHook()
-// {
-// }
-// void LowLevelTask::cleanupHook()
-// {
-// }
+void LowLevelTask::stopHook()
+{
+    delete timestamp_estimator;
+    timestamp_estimator = 0;
+}
+void LowLevelTask::cleanupHook()
+{
+    llpc.close();
+}
 
