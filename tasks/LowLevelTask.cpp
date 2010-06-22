@@ -57,7 +57,7 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
         if (activity)
         {
             if (activity->hasError() || activity->hasTimeout())
-                return fatal();
+                return fatal(IO_ERROR);
         }
 
 	if(isPortUpdated(_ShortExposure)){
@@ -97,7 +97,7 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 	
         double zReading;
 	if(!llpc.getData(zReading)){
-            return fatal();
+            return fatal(IO_ERROR);
         }
 
         if(zOffset == UNINITIALIZED_Z_VALUE){
