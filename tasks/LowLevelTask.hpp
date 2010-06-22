@@ -9,14 +9,17 @@ namespace RTT
     class FileDescriptorActivity;
 }
 
+namespace aggregator
+{
+    class TimestampEstimator;
+}
 
 namespace low_level_driver {
     class LowLevelTask : public LowLevelTaskBase
     {
 	friend class LowLevelTaskBase;
     protected:
-    
-    
+	aggregator::TimestampEstimator* timestamp_estimator;
 
     public:
         LowLevelTask(std::string const& name = "low_level_driver::LowLevelTask");
@@ -75,13 +78,13 @@ namespace low_level_driver {
         /** This hook is called by Orocos when the state machine transitions
          * from Running to Stopped after stop() has been called.
          */
-        // void stopHook();
+        void stopHook();
 
         /** This hook is called by Orocos when the state machine transitions
          * from Stopped to PreOperational, requiring the call to configureHook()
          * before calling start() again.
          */
-        // void cleanupHook();
+        void cleanupHook();
 	private:
 		LowLevelProcessor llpc;
                 /** Last depth reading */
