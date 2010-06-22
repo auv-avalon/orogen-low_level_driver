@@ -6,7 +6,7 @@ import_types_from "base"
 import_types_from "LongExposure.hpp"
 import_types_from "ShortExposure.hpp"
 import_types_from "DebugLED.hpp"
-import_types_from "ServoValue.hpp"
+import_types_from "LightValue.hpp"
 import_types_from "DepthReading.hpp"
 
 using_library "lowlevelDriver"
@@ -24,8 +24,8 @@ task_context "LowLevelTask" do
 	input_port("LongExposure","controlData::LongExposure").
 		doc "Long Exposure Time for Triggered Prosilica Mode"
 	
-	input_port("ServoValue","controlData::ServoValue").
-		doc "Servo Target Position"
+	input_port("LightValue","controlData::LightValue").
+		doc "Light Target Value"
 	
 	input_port("DebugLED","controlData::DebugLED").
 		doc "Debug LED Values"
@@ -47,7 +47,7 @@ task_context "LowLevelTask" do
 	
 	port_driven :ShortExposure
 	port_driven :LongExposure
-	port_driven :ServoValue
+	port_driven :LightValue
 	port_driven :DebugLED
 
         fatal_states :IO_ERROR

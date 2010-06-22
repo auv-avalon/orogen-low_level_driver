@@ -82,8 +82,8 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 	}
 //	if(isPortUpdated(_ServoValue))
 	{
-		controlData::ServoValue data;	
-		if(!_ServoValue.read(data)){
+		controlData::LightValue data;	
+		if(!_LightValue.read(data)){
 			fprintf(stderr,"Data not availible yet\n");	
 		}else{
  			llpc.setServoValue(data.value);
