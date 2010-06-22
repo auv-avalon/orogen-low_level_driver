@@ -68,7 +68,8 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
                 return fatal();
         }
 
-	if(isPortUpdated(_ShortExposure)){
+//	if(isPortUpdated(_ShortExposure))
+	{
 		controlData::ShortExposure data;	
 		if(!_ShortExposure.read(data)){
 			fprintf(stderr,"Data not availible yet\n");	
@@ -77,7 +78,8 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 			llpc.setShortExposure(data.value);
 		}
 	}
-	if(isPortUpdated(_LongExposure)){
+//	if(isPortUpdated(_LongExposure))
+	{
 		controlData::LongExposure data;	
 		if(!_LongExposure.read(data)){
 			fprintf(stderr,"Data not availible yet\n");	
@@ -86,7 +88,8 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
  			llpc.setLongExposure(data.value);
 		}
 	}
-	if(isPortUpdated(_ServoValue)){
+//	if(isPortUpdated(_ServoValue))
+	{
 		controlData::ServoValue data;	
 		if(!_ServoValue.read(data)){
 			fprintf(stderr,"Data not availible yet\n");	
@@ -94,7 +97,8 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
  			llpc.setServoValue(data.value);
 		}
 	}
-	if(isPortUpdated(_DebugLED)){
+//	if(isPortUpdated(_DebugLED))
+	{
 		controlData::DebugLED data;	
 		if(!_DebugLED.read(data)){
 			fprintf(stderr,"Data not availible yet\n");	
