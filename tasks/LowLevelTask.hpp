@@ -87,6 +87,9 @@ namespace low_level_driver {
         void cleanupHook();
 	private:
 		LowLevelProcessor llpc;
+		/** Time of last depth reading on llpc
+		 * It is different from zCurrent.time */
+		base::Time zLastTime;
                 /** Last depth reading */
                 base::samples::RigidBodyState zCurrent;
                 /** Depth offset (i.e. depth reading at z=0) */

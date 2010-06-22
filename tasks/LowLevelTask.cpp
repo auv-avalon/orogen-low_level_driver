@@ -59,6 +59,10 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
             if (activity->hasError() || activity->hasTimeout())
                 return fatal(IO_ERROR);
         }
+	if(!llpc.getData()){
+            return fatal(IO_ERROR);
+        }
+
 
 //	if(isPortUpdated(_ShortExposure))
 	{
@@ -99,16 +103,17 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
 		}
 	}
 	
-        double zReading;
-	if(!llpc.getData(zReading)){
-            return fatal(IO_ERROR);
-        }
+	if (llpc.depthTime == zLastTime)
+	    return;
+
+	double zReading = llpc.depthValue;
+	zLastTime = llpc.depthTime;
+        base::Time now = timestamp_estimator->update(llpc.depthTime);
 
         if(zOffset == UNINITIALIZED_Z_VALUE){
                 zOffset  = zReading;
         }
         zReading -= zOffset;
-        base::Time now = timestamp_estimator->update(base::Time::now());
 
         if(zCurrent.time.isNull())
         {
