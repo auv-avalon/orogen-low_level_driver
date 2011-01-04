@@ -1,14 +1,10 @@
 #include "LowLevelTask.hpp"
 
-#include <rtt/FileDescriptorActivity.hpp>
 #include <TimestampEstimator.hpp>
 
 using namespace low_level_driver;
 
 static const double UNINITIALIZED_Z_VALUE = 9999.9;
-
-RTT::FileDescriptorActivity* LowLevelTask::getFileDescriptorActivity()
-{ return dynamic_cast< RTT::FileDescriptorActivity* >(getActivity().get()); }
 
 
 LowLevelTask::LowLevelTask(std::string const& name)
@@ -27,11 +23,12 @@ LowLevelTask::LowLevelTask(std::string const& name)
 
 bool LowLevelTask::configureHook()
 {
+	activity = getActivity<RTT::extras::FileDescriptorActivity>();
+
 	if(!llpc.init(_port.value())){
 		return false;
 	}
 
-        RTT::FileDescriptorActivity* activity = getFileDescriptorActivity();
         if (activity)
         {
             activity->watch(llpc.getFileDescriptor());
@@ -51,9 +48,8 @@ bool LowLevelTask::startHook()
         return true;
 }
 
-void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_ports)
+void LowLevelTask::updateHook()
 {
-        RTT::FileDescriptorActivity* activity = getFileDescriptorActivity();
         if (activity)
         {
             if (activity->hasError() || activity->hasTimeout())
@@ -64,41 +60,32 @@ void LowLevelTask::updateHook(std::vector<RTT::PortInterface*> const& updated_po
         }
 
 
-//	if(isPortUpdated(_ShortExposure))
 	{
 		controlData::ShortExposure data;	
-		if(!_ShortExposure.read(data)){
-			//fprintf(stderr,"Data not availible yet\n");	
-		}else{
+		if(_ShortExposure.read(data) == RTT::NewData){
  			printf("Got new Short Exposure %i\n",data.value);
 			llpc.setShortExposure(data.value);
 		}
 	}
-//	if(isPortUpdated(_LongExposure))
+	
 	{
 		controlData::LongExposure data;	
-		if(!_LongExposure.read(data)){
-			//fprintf(stderr,"Data not availible yet\n");	
-		}else{
+		if(_LongExposure.read(data) == RTT::NewData){
  			printf("Got new Long Exposure %i\n",data.value);
  			llpc.setLongExposure(data.value);
 		}
 	}
-//	if(isPortUpdated(_ServoValue))
+	
 	{
 		controlData::LightValue data;	
-		if(!_LightValue.read(data)){
-			//fprintf(stderr,"Data not availible yet\n");	
-		}else{
+		if(_LightValue.read(data) == RTT::NewData){
  			llpc.setServoValue(data.value);
 		}
 	}
-//	if(isPortUpdated(_DebugLED))
+	
 	{
 		controlData::DebugLED data;	
-		if(!_DebugLED.read(data)){
-			//fprintf(stderr,"Data not availible yet\n");	
-		}else{
+		if(_DebugLED.read(data) == RTT::NewData){
  			llpc.setLEDs(data.value);
 		}
 	}

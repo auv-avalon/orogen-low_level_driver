@@ -15,7 +15,7 @@ task_context "LowLevelTask" do
 	#	 Name Frei belibig, Namespace::Objekt
 	needs_configuration
 	
-	output_port("depth_samples", "wrappers::samples::RigidBodyState").
+	output_port("depth_samples", "base::samples::RigidBodyState").
 		doc "Current Depth"
     
 	input_port("ShortExposure","controlData::ShortExposure").

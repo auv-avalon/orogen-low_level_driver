@@ -4,6 +4,8 @@
 #include "low_level_driver/LowLevelTaskBase.hpp"
 #include <lowlevel_processor.h>
 
+#include <rtt/extras/FileDescriptorActivity.hpp>
+
 namespace RTT
 {
     class FileDescriptorActivity;
@@ -20,11 +22,10 @@ namespace low_level_driver {
 	friend class LowLevelTaskBase;
     protected:
 	aggregator::TimestampEstimator* timestamp_estimator;
+	RTT::extras::FileDescriptorActivity* activity;
 
     public:
         LowLevelTask(std::string const& name = "low_level_driver::LowLevelTask");
-
-        RTT::FileDescriptorActivity* getFileDescriptorActivity();
 
         /** This hook is called by Orocos when the state machine transitions
          * from PreOperational to Stopped. If it returns false, then the
@@ -64,7 +65,7 @@ namespace low_level_driver {
          * called before starting it again.
          *
          */
-         void updateHook(std::vector<RTT::PortInterface*> const& updated_ports);
+         void updateHook();
         
 
         /** This hook is called by Orocos when the component is in the
