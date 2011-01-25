@@ -62,7 +62,7 @@ void LowLevelTask::updateHook()
 
 	{
 		controlData::ShortExposure data;	
-		if(_ShortExposure.read(data) == RTT::NewData){
+		while(_ShortExposure.read(data,false) == RTT::NewData){
  			printf("Got new Short Exposure %i\n",data.value);
 			llpc.setShortExposure(data.value);
 		}
@@ -70,7 +70,7 @@ void LowLevelTask::updateHook()
 	
 	{
 		controlData::LongExposure data;	
-		if(_LongExposure.read(data) == RTT::NewData){
+		while(_LongExposure.read(data,false) == RTT::NewData){
  			printf("Got new Long Exposure %i\n",data.value);
  			llpc.setLongExposure(data.value);
 		}
@@ -78,14 +78,14 @@ void LowLevelTask::updateHook()
 	
 	{
 		controlData::LightValue data;	
-		if(_LightValue.read(data) == RTT::NewData){
+		while(_LightValue.read(data,false) == RTT::NewData){
  			llpc.setServoValue(data.value);
 		}
 	}
 	
 	{
 		controlData::DebugLED data;	
-		if(_DebugLED.read(data) == RTT::NewData){
+		while(_DebugLED.read(data,false) == RTT::NewData){
  			llpc.setLEDs(data.value);
 		}
 	}
