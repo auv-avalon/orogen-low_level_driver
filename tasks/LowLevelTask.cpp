@@ -29,11 +29,6 @@ bool LowLevelTask::configureHook()
 		return false;
 	}
 
-        if (activity)
-        {
-            activity->watch(llpc.getFileDescriptor());
-            activity->setTimeout(1000);
-        }
  	llpc.setShortExposure(_shortExposure.value());
  	llpc.setLongExposure(_longExposure.value());
         zOffset  = UNINITIALIZED_Z_VALUE;
@@ -45,6 +40,11 @@ bool LowLevelTask::startHook()
         zCurrent.time = base::Time();
 	llpc.clear();
 	timestamp_estimator = new aggregator::TimestampEstimator(base::Time::fromSeconds(2));
+        if (activity)
+        {
+            activity->watch(llpc.getFileDescriptor());
+            activity->setTimeout(1000);
+        }
         return true;
 }
 
@@ -136,6 +136,8 @@ void LowLevelTask::updateHook()
 // }
 void LowLevelTask::stopHook()
 {
+    if (activity)
+    	activity->clearAllWatches();
     delete timestamp_estimator;
     timestamp_estimator = 0;
 }
