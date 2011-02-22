@@ -13,6 +13,9 @@ LowLevelTask::LowLevelTask(std::string const& name)
         zOffset  = UNINITIALIZED_Z_VALUE;
 }
 
+LowLevelTask::~LowLevelTask(){
+}
+
 
 
 

@@ -25,6 +25,7 @@ namespace low_level_driver {
 	RTT::extras::FileDescriptorActivity* activity;
 
     public:
+        ~LowLevelTask();
         LowLevelTask(std::string const& name = "low_level_driver::LowLevelTask");
 
         /** This hook is called by Orocos when the state machine transitions
