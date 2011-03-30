@@ -23,7 +23,7 @@ namespace low_level_driver {
     protected:
 	aggregator::TimestampEstimator* timestamp_estimator;
 	RTT::extras::FileDescriptorActivity* activity;
-
+	int error;
     public:
         ~LowLevelTask();
         LowLevelTask(std::string const& name = "low_level_driver::LowLevelTask");

@@ -11,6 +11,7 @@ LowLevelTask::LowLevelTask(std::string const& name)
     : LowLevelTaskBase(name), timestamp_estimator(0)
 {
         zOffset  = UNINITIALIZED_Z_VALUE;
+	error = 0;
 }
 
 LowLevelTask::~LowLevelTask(){
@@ -59,8 +60,11 @@ void LowLevelTask::updateHook()
                 return fatal(IO_ERROR);
         }
 	if(!llpc.getData()){
-            return fatal(IO_ERROR);
-        }
+	    if(error++ > 50)
+	            return fatal(IO_ERROR);
+        }else{
+		error = 0;
+	}
 
 
 	{
