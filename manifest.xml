@@ -9,6 +9,6 @@
   </export>
 	<depend package="drivers/iodrivers_base" />
 	<depend package="drivers/aggregator" />
-	<depend package="drivers/lowLevelDriver" />
+	<depend package="avalon/lowLevelDriver" />
 </package>
 
