@@ -28,6 +28,8 @@ namespace low_level_driver {
         ~LowLevelTask();
         LowLevelTask(std::string const& name = "low_level_driver::LowLevelTask");
 
+	void reset();
+
         /** This hook is called by Orocos when the state machine transitions
          * from PreOperational to Stopped. If it returns false, then the
          * component will stay in PreOperational. Otherwise, it goes into

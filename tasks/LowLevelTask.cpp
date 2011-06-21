@@ -18,6 +18,12 @@ LowLevelTask::~LowLevelTask(){
 }
 
 
+void LowLevelTask::reset()
+{
+	if(llpc.isValid()){	
+		llpc.reset();
+	}
+}
 
 
 

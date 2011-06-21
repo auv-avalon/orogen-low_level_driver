@@ -29,6 +29,9 @@ task_context "LowLevelTask" do
 	
 	input_port("DebugLED","controlData::DebugLED").
 		doc "Debug LED Values"
+
+	operation('reset').
+		doc("Reset the Microcontroller, this means the Depth offset will be reseted too, and is the typical use-case")
 	
         # IIR filter factor for the Z measurement.
         #  z_value = zIIR * new_z + (1 - zIIR) * z_value
