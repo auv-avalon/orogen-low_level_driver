@@ -63,11 +63,11 @@ void LowLevelTask::updateHook()
         if (activity)
         {
             if (activity->hasError() || activity->hasTimeout())
-                return fatal(IO_ERROR);
+                return exception(IO_ERROR);
         }
 	if(!llpc.getData()){
 	    if(error++ > 50)
-	            return fatal(IO_ERROR);
+	            return exception(IO_ERROR);
         }else{
 		error = 0;
 	}

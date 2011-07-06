@@ -53,7 +53,7 @@ task_context "LowLevelTask" do
 	port_driven :LightValue
 	port_driven :DebugLED
 
-        fatal_states :IO_ERROR
+        exception_states :IO_ERROR
 	fd_driven	
 end
 
