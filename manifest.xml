@@ -10,5 +10,6 @@
 	<depend package="drivers/iodrivers_base" />
 	<depend package="drivers/aggregator" />
 	<depend package="avalon/lowLevelDriver" />
+  <tags>stable</tags>
 </package>
 
