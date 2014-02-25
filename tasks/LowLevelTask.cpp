@@ -10,8 +10,8 @@ static const double UNINITIALIZED_Z_VALUE = 9999.9;
 LowLevelTask::LowLevelTask(std::string const& name)
     : LowLevelTaskBase(name), timestamp_estimator(0)
 {
-        zOffset  = UNINITIALIZED_Z_VALUE;
-	error = 0;
+//        zOffset  = UNINITIALIZED_Z_VALUE;
+//	error = 0;
 }
 
 LowLevelTask::~LowLevelTask(){
@@ -39,17 +39,17 @@ bool LowLevelTask::configureHook()
 		return false;
 	}
 
- 	llpc.setShortExposure(_shortExposure.value());
- 	llpc.setLongExposure(_longExposure.value());
-        zOffset  = UNINITIALIZED_Z_VALUE;
+// 	llpc.setShortExposure(_shortExposure.value());
+// 	llpc.setLongExposure(_longExposure.value());
+//        zOffset  = UNINITIALIZED_Z_VALUE;
 	return true;
 }
 bool LowLevelTask::startHook()
 {
         zCurrent.invalidate();
-        zCurrent.time = base::Time();
+        zCurrent.time = base::Time::now();
 	llpc.clear();
-	timestamp_estimator = new aggregator::TimestampEstimator(base::Time::fromSeconds(2));
+//	timestamp_estimator = new aggregator::TimestampEstimator(base::Time::fromSeconds(2));
         if (activity)
         {
             activity->watch(llpc.getFileDescriptor());
@@ -72,6 +72,24 @@ void LowLevelTask::updateHook()
 		error = 0;
 	}
 
+        double depth=0;
+
+        while(_depth_samples.read(zCurrent,true) == RTT::NewData){
+            depth = zCurrent.position[2];
+            zLastTime = zCurrent.time;
+        }
+
+        
+        //Don't touch this code without asking for grants @ STUDENTES
+        
+        //Safty to prevent old//non incomming samples
+        if(zLastTime + base::Time::fromSeconds(5) > base::Time::now()){
+            depth=0;
+        }
+        if(depth < -2.0){
+            llpc.keepHighPowerLaserActive();
+        }
+        //Ende don't touch it
 
 	{
 		controlData::ShortExposure data;	
@@ -102,7 +120,7 @@ void LowLevelTask::updateHook()
  			llpc.setLEDs(data.value);
 		}
 	}
-	
+/*	
 	if (llpc.depthTime == zLastTime)
 	    return;
 
@@ -142,6 +160,7 @@ void LowLevelTask::updateHook()
 
         zCurrent.time = now;
         _depth_samples.write(zCurrent);
+        */
 }
 
 // void LowLevelTask::errorHook()
@@ -149,10 +168,10 @@ void LowLevelTask::updateHook()
 // }
 void LowLevelTask::stopHook()
 {
-    if (activity)
-    	activity->clearAllWatches();
-    delete timestamp_estimator;
-    timestamp_estimator = 0;
+//    if (activity)
+//    	activity->clearAllWatches();
+//    delete timestamp_estimator;
+//    timestamp_estimator = 0;
 }
 void LowLevelTask::cleanupHook()
 {

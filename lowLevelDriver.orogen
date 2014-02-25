@@ -15,8 +15,11 @@ task_context "LowLevelTask" do
 	#	 Name Frei belibig, Namespace::Objekt
 	needs_configuration
 	
-	output_port("depth_samples", "base::samples::RigidBodyState").
+        input_port("depth_samples", "base::samples::RigidBodyState").
 		doc "Current Depth"
+	
+	#output_port("depth_samples", "base::samples::RigidBodyState").
+#		doc "Current Depth"
     
 	input_port("ShortExposure","controlData::ShortExposure").
 		doc "Short Exposure Time for Triggered Prosilica Mode"
@@ -35,10 +38,10 @@ task_context "LowLevelTask" do
 	
         # IIR filter factor for the Z measurement.
         #  z_value = zIIR * new_z + (1 - zIIR) * z_value
-        property('zIIR', 'double', 0.5);
+#        property('zIIR', 'double', 0.5);
         # IIR filter factor for the Z speed measurement.
         #  zVelocity_value = zVelocityIIR * new_zVelocity + (1 - zVelocityIIR) * zVelocity_value
-        property('zVelocityIIR', 'double', 1.0);
+#        property('zVelocityIIR', 'double', 1.0);
 	property('longExposure', 'int', 15000)
 	property('shortExposure', 'int', 5000)
 
