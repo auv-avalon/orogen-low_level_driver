@@ -8,6 +8,7 @@ import_types_from "ShortExposure.hpp"
 import_types_from "DebugLED.hpp"
 import_types_from "LightValue.hpp"
 import_types_from "DepthReading.hpp"
+import_types_from "LaserRate.hpp"
 
 using_library "lowlevelDriver"
 
@@ -32,6 +33,9 @@ task_context "LowLevelTask" do
 	
 	input_port("DebugLED","controlData::DebugLED").
 		doc "Debug LED Values"
+	
+	input_port("LaserRate","controlData::LaserRate").
+		doc "Rate for Laser, 0: laser of, 1-99 blinking laser, 100 static laser"
 
 	operation('reset').
 		doc("Reset the Microcontroller, this means the Depth offset will be reseted too, and is the typical use-case")

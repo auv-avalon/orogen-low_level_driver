@@ -120,7 +120,12 @@ void LowLevelTask::updateHook()
  			llpc.setLEDs(data.value);
 		}
 	}
-/*	
+        {
+            controlData::LaserRate data;
+            while(_LaserRate.read(data) == RTT::NewData){
+                    llpc.setLaserRate(data.value);
+            }
+        }
 	if (llpc.depthTime == zLastTime)
 	    return;
 
