@@ -126,6 +126,7 @@ void LowLevelTask::updateHook()
                     llpc.setLaserRate(data.value);
             }
         }
+        /*
 	if (llpc.depthTime == zLastTime)
 	    return;
 
