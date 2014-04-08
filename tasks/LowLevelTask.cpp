@@ -35,9 +35,11 @@ bool LowLevelTask::configureHook()
 {
 	activity = getActivity<RTT::extras::FileDescriptorActivity>();
 
+        printf("Opening lowLevelDriver on Port %s\n",_port.value().c_str());
 	if(!llpc.init(_port.value())){
 		return false;
 	}
+        printf("Opening successfull opened %s\n",_port.value().c_str());
 
 // 	llpc.setShortExposure(_shortExposure.value());
 // 	llpc.setLongExposure(_longExposure.value());
@@ -53,7 +55,7 @@ bool LowLevelTask::startHook()
         if (activity)
         {
             activity->watch(llpc.getFileDescriptor());
-            activity->setTimeout(1000);
+            activity->setTimeout(5000);
         }
         return true;
 }
@@ -62,12 +64,16 @@ void LowLevelTask::updateHook()
 {
         if (activity)
         {
-            if (activity->hasError() || activity->hasTimeout())
+            if (activity->hasError() || activity->hasTimeout()){
+                printf("Error 1\n");
                 return exception(IO_ERROR);
+            }
         }
 	if(!llpc.getData()){
-	    if(error++ > 50)
+	    if(error++ > 50){
+                    printf("Error 2\n");
 	            return exception(IO_ERROR);
+            }
         }else{
 		error = 0;
 	}
@@ -83,12 +89,18 @@ void LowLevelTask::updateHook()
         //Don't touch this code without asking for grants @ STUDENTES
         
         //Safty to prevent old//non incomming samples
-        if(zLastTime + base::Time::fromSeconds(5) > base::Time::now()){
+        if(zLastTime + base::Time::fromSeconds(5) < base::Time::now())
+        {
+            printf("Resetting depth to zero\n");
             depth=0;
         }
         if(depth < -2.0){
+            printf("laser on ");
             llpc.keepHighPowerLaserActive();
+        }else{
+            printf("laser off ");
         }
+        printf("depth: %f\n",depth);
         //Ende don't touch it
 
 	{
