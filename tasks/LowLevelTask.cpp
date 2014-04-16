@@ -91,16 +91,12 @@ void LowLevelTask::updateHook()
         //Safty to prevent old//non incomming samples
         if(zLastTime + base::Time::fromSeconds(5) < base::Time::now())
         {
-            printf("Resetting depth to zero\n");
             depth=0;
         }
         if(depth < -2.0){
-            printf("laser on ");
             llpc.keepHighPowerLaserActive();
         }else{
-            printf("laser off ");
         }
-        printf("depth: %f\n",depth);
         //Ende don't touch it
 
 	{
