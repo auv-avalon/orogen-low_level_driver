@@ -95,7 +95,8 @@ void LowLevelTask::updateHook()
         }
         if(depth < -2.0){
             llpc.keepHighPowerLaserActive();
-        }else{
+        }else if(depth > -1.0){
+            //llpc.deactivateHighPowerLaser();
         }
         //Ende don't touch it
 
@@ -182,6 +183,7 @@ void LowLevelTask::updateHook()
 // }
 void LowLevelTask::stopHook()
 {
+    llpc.deactivateHighPowerLaser();
 //    if (activity)
 //    	activity->clearAllWatches();
 //    delete timestamp_estimator;
