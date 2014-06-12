@@ -9,7 +9,7 @@
   </export>
 	<depend package="drivers/iodrivers_base" />
 	<depend package="drivers/aggregator" />
-	<depend package="avalon/lowLevelDriver" />
+	<depend package="auv_avalon/low_level_driver" />
   <tags>stable</tags>
 </package>
 
